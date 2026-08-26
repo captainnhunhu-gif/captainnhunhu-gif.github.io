@@ -18,7 +18,7 @@
   var ctx  = canvas.getContext('2d');
   var root = document.documentElement;
 
-  var LETTERS = (window.SITE && window.SITE.hero && window.SITE.hero.blocks) || ['Q','U','Ỳ','N','H','♥'];
+  var LETTERS = (window.SITE && window.SITE.blocks) || ['Q','U','Ỳ','N','H','♥'];
   // real toy-block colours, every one outlined in ink like a marker drawing
   var SCHEME  = ['--pink','--powder','--olive','--cream','--pink','--powder'];
 
@@ -48,26 +48,32 @@
     W = rect.width; H = rect.height;
     canvas.width = W * DPR; canvas.height = H * DPR;
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-    floorY = H - 38;
+    floorY = H - Math.max(9, Math.min(38, H * 0.13));
 
-    // Work out the rows first — the shape only depends on how many blocks there are.
-    var rows = [], i = 0, want = 3;
-    while (i < blocks.length) {
-      var row = [];
-      for (var k = 0; k < want && i < blocks.length; k++, i++) row.push(i);
-      rows.push(row);
-      if (want > 1) want--;
+    // A tall stage stacks a pyramid. A short one (the little nameplate in the
+    // header) lays the letters out in a single row instead.
+    var rows = [], i = 0;
+    if (H < 150) {
+      var one = [];
+      for (; i < blocks.length; i++) one.push(i);
+      rows.push(one);
+    } else {
+      var want = 3;
+      while (i < blocks.length) {
+        var row = [];
+        for (var k = 0; k < want && i < blocks.length; k++, i++) row.push(i);
+        rows.push(row);
+        if (want > 1) want--;
+      }
     }
 
-    // Then size the blocks so the finished pyramid fits the stage in BOTH
-    // directions. Width alone isn't enough: on a short viewport the top block
-    // used to be drawn above the canvas and got clipped by the frame.
     var widest = 0;
     for (var q = 0; q < rows.length; q++) widest = Math.max(widest, rows[q].length);
-    var gap = 6, pad = 26;
+    var gap = Math.max(3, Math.round(W / 90));
+    var pad = Math.max(10, Math.round(W / 22));
     var byWidth  = (W - pad * 2 - gap * (widest - 1)) / widest;
     var byHeight = ((floorY - pad) - gap * (rows.length - 1)) / rows.length;
-    var size = Math.max(34, Math.min(92, byWidth, byHeight));
+    var size = Math.max(16, Math.min(92, byWidth, byHeight));
     var step = size + gap;
     var cx = W / 2;
 
@@ -199,7 +205,8 @@
   /* A marker-drawn frame: walk the perimeter of an inset rectangle and push
      each point in and out on a sine wave, so the line wobbles like a pen. */
   function drawFrame() {
-    var inset = 13, amp = 6.5, wave = 34;
+    var scale = Math.max(0.42, Math.min(1, W / 700));
+    var inset = 8 * scale + 4, amp = 6.5 * scale, wave = 34 * scale;
     var x0 = inset, y0 = inset, x1 = W - inset, y1 = H - inset;
     var w = x1 - x0, h = y1 - y0;
     if (w <= 0 || h <= 0) return;
@@ -218,8 +225,8 @@
       if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
     }
     ctx.closePath();
-    ctx.strokeStyle = css('--blue') || '#1B4DE4';
-    ctx.lineWidth = 4;
+    ctx.strokeStyle = css('--maroon') || '#5C1F22';
+    ctx.lineWidth = Math.max(2, 4 * scale);
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
     ctx.stroke();
@@ -237,12 +244,12 @@
 
       // flat pastel fill, then a heavy ink outline — no gloss, no gradients
       ctx.fillStyle = css(b.col) || '#F3D3DA';
-      roundRect(-s/2, -s/2, s, s, 13); ctx.fill();
+      roundRect(-s/2, -s/2, s, s, Math.max(3, s * 0.17)); ctx.fill();
 
       ctx.strokeStyle = ink;
       ctx.lineWidth = 2.5;
       ctx.lineJoin = 'round';
-      roundRect(-s/2, -s/2, s, s, 13); ctx.stroke();
+      roundRect(-s/2, -s/2, s, s, Math.max(3, s * 0.17)); ctx.stroke();
 
       ctx.fillStyle = ink;
       ctx.font = '600 ' + Math.round(s * 0.46) + 'px ' + css('--hand');
@@ -252,6 +259,7 @@
     }
   }
 
+  var restackTimer = null;
   var last = performance.now(), acc = 0;
   function loop(t) {
     var dt = Math.min(0.033, (t - last) / 1000); last = t;
@@ -260,7 +268,11 @@
       var stepDt = 1/120, guard = 0;
       while (acc >= stepDt && guard < 6) { step(stepDt); acc -= stepDt; guard++; }
       draw();
-      if (allSleeping() && !pointer.down) state = 'rested';
+      if (allSleeping() && !pointer.down) {
+        state = 'rested';
+        clearTimeout(restackTimer);
+        restackTimer = setTimeout(function () { if (state === 'rested') build(); }, 2600);
+      }
     } else if (state === 'static' || state === 'rested') {
       draw();
     }
@@ -287,7 +299,9 @@
     if (b) {
       ev.preventDefault(); wake();
       held = b; b.vx = b.vy = b.va = 0;
-      if (hint) hint.textContent = 'now fling it!';
+    } else {
+      ev.preventDefault();
+      knock();
     }
   }
   function onMove(ev) {

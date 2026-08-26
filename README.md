@@ -8,15 +8,13 @@ My storybook. A mom, a marketer, and a small pile of apps that weren't supposed 
 
 Everything editable lives in one file: [`content/site.js`](content/site.js).
 
-- **New app, or anything else for the wall?** Add one object to `wall`.
-  Set `size: 'big'` for a project, `'small'` for a little object.
+The whole site is one screen. Everything on it is an object in `desk`.
+Click an object and its panel opens.
+
+- **Anything new?** Add one object to `desk`.
   `icon:` is any name from `js/icons.js`; `color:` is cream, pink, powder or olive.
-- **New kid?** Add one row to `kids`.
-- **New number?** Add one to `numbers`.
-
-Nothing else needs touching. The page builds itself from that file.
-
-Lines marked `draft: true` are placeholder words waiting to be replaced with my own.
+  `body:` is the paragraphs shown in the panel.
+- Lines marked `draft: true` are placeholder words waiting to be replaced with my own.
 
 ## How it's built
 
@@ -30,7 +28,7 @@ HTML file still opens in fifteen years. A pile of packages does not.
 |------|--------------|
 | `content/site.js` | All the content. The only file you normally edit. |
 | `index.html` | The page skeleton and the mount points. |
-| `css/storybook.css` | Palette, type, layout, day/night. |
+| `css/storybook.css` | Palette, type, the one-screen layout, the panel, day/night. |
 | `js/render.js` | Reads `site.js`, builds the page, handles the theme toggle. |
 | `js/icons.js` | The hand-drawn icons. Add one here to use it on the wall. |
 | `js/blocks.js` | Hand-rolled toy-block physics for the tower. No library. |

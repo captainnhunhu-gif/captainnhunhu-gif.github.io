@@ -7,132 +7,46 @@
 <meta name="description" content="A mom, a marketer, and a small pile of apps that weren’t supposed to work. Two of them you can play right now with your webcam.">
 <meta name="color-scheme" content="light dark">
 <link rel="preload" href="fonts/playpen-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23F2EFE6'/%3E%3Ctext x='16' y='24' font-size='21' text-anchor='middle' fill='%231B4DE4' font-family='cursive'%3EQ%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23F3D3DA'/%3E%3Ctext x='16' y='24' font-size='21' text-anchor='middle' fill='%23241F1E' font-family='cursive'%3EQ%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="css/storybook.css">
 </head>
 <body>
 
-<div class="strip">
-  <span>✳ a true story · still being written</span>
-  <button id="theme" aria-label="Toggle day and night mode">day / night</button>
+<div class="room">
+
+  <hr class="ribbon ribbon--stripe">
+  <div class="ticker" id="ticker" aria-hidden="true"></div>
+  <hr class="ribbon ribbon--dots">
+
+  <!-- ================= THE SIGN ================= -->
+  <header class="sign">
+    <div class="sign-left">
+      <div class="stage" id="stage"
+           aria-label="A tower of toy blocks spelling Quỳnh. Grab one and fling it.">
+        <canvas id="c"></canvas>
+      </div>
+      <div class="sign-words">
+        <h1 class="title" id="title"></h1>
+        <p class="tagline" id="tagline"></p>
+      </div>
+    </div>
+    <div class="sign-right">
+      <button id="theme" aria-label="Toggle day and night mode">day / night</button>
+    </div>
+  </header>
+
+  <!-- ================= THE DESK ================= -->
+  <main class="desk" id="desk" aria-label="Everything on the desk. Pick something up."></main>
+
+  <div class="deskfoot">
+    <span class="hint">psst — click anything. or knock the blocks over.</span>
+    <span id="deskfoot"></span>
+  </div>
+
 </div>
 
-<hr class="ribbon ribbon--stripe">
-<div class="ticker" id="ticker" aria-hidden="true"></div>
-<hr class="ribbon ribbon--dots">
-
-<main class="shell">
-
-  <!-- ================= COVER ================= -->
-  <section class="hero">
-    <div class="eyebrow">a portfolio you can knock over</div>
-    <h1 class="title">Work in <i>Progress</i></h1>
-    <p class="subtitle">A mom, a marketer, and a small pile of apps that weren’t supposed to work. (They did.)</p>
-
-    <div class="stage-wrap">
-      <div class="stage" id="stage"
-           aria-label="An interactive tower of toy blocks spelling Quỳnh. Drag a block to fling it, or use the buttons below to knock the tower down and build it back.">
-        <canvas id="c"></canvas>
-        <div class="floorline"></div>
-        <div class="base-mascot">
-          <svg width="58" height="70" viewBox="0 0 120 150" fill="none" stroke="currentColor"
-               stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="55" cy="20" r="9"/>
-            <path d="M40 34 Q40 18 55 18 Q70 18 70 34"/>
-            <circle cx="55" cy="44" r="19"/>
-            <ellipse cx="49" cy="44" rx="2.1" ry="2.6"/>
-            <ellipse cx="61" cy="44" rx="2.1" ry="2.6"/>
-            <g class="m-calm"><path d="M50 53 Q55 57 60 53"/></g>
-            <g class="m-startled"><circle cx="55" cy="54" r="3.4"/></g>
-            <path d="M42 66 L38 108 L72 108 L68 66 Z"/>
-            <path d="M44 70 L30 92"/>
-            <path d="M66 70 L84 62"/>
-          </svg>
-        </div>
-      </div>
-      <div class="hint" id="hint">psst — grab a block and fling it.</div>
-      <div class="controls">
-        <button class="btn btn--knock" id="knock">knock it down</button>
-        <button class="btn btn--build" id="build">build it back</button>
-      </div>
-    </div>
-  </section>
-
-  <hr class="squiggle">
-
-  <!-- ================= CHAPTER ONE ================= -->
-  <section class="about reveal">
-    <div class="doodle" aria-hidden="true">
-      <svg width="92" height="108" viewBox="0 0 120 150" fill="none" stroke="currentColor"
-           stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="55" cy="20" r="9"/>
-        <path d="M40 34 Q40 18 55 18 Q70 18 70 34"/>
-        <circle cx="55" cy="44" r="19"/>
-        <ellipse cx="49" cy="44" rx="2.1" ry="2.6"/>
-        <ellipse cx="61" cy="44" rx="2.1" ry="2.6"/>
-        <path d="M50 53 Q55 57 60 53"/>
-        <path d="M42 66 L38 108 L72 108 L68 66 Z"/>
-        <path d="M44 70 L30 92"/>
-        <path d="M66 70 L84 54"/>
-      </svg>
-    </div>
-    <div>
-      <span class="ch-label">chapter one</span>
-      <div id="origin-body"></div>
-    </div>
-  </section>
-
-  <hr class="squiggle">
-
-  <!-- ================= CHAPTER TWO ================= -->
-  <section class="work reveal">
-    <span class="ch-label">chapter two</span>
-    <h2>the wall.</h2>
-    <div class="wall" id="wall"></div>
-  </section>
-
-  <hr class="ribbon ribbon--stripe" style="margin-top:66px">
-
-  <!-- ================= CHAPTER THREE ================= -->
-  <section class="receipts-wrap reveal">
-    <span class="ch-label">chapter three</span>
-    <h2>the receipts.</h2>
-    <p class="lead" id="numbers-lead"></p>
-    <div class="receipts" id="receipts"></div>
-    <p class="sharp-note" id="numbers-foot"></p>
-  </section>
-
-  <hr class="squiggle">
-
-  <!-- ================= DEDICATION ================= -->
-  <section class="kids reveal">
-    <span class="ch-label">dedication</span>
-    <h2>for the ones who won’t read this for years.</h2>
-    <div id="kids-list"></div>
-  </section>
-
-  <hr class="squiggle">
-
-  <!-- ================= THE END ================= -->
-  <section class="end reveal" id="contact">
-    <div class="envelope" aria-hidden="true">
-      <svg width="98" height="68" viewBox="0 0 140 96" fill="none" stroke="currentColor"
-           stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M9 13 Q7 10 12 10 L129 7 Q135 7 134 13 L137 82 Q137 88 131 88 L13 90 Q7 90 8 84 Z"/>
-        <path d="M11 14 Q45 46 69 48 Q92 49 132 11"/>
-        <path d="M58 40 Q69 50 80 41 Q69 47 58 40 Z" fill="currentColor" stroke="none"/>
-      </svg>
-    </div>
-    <span class="ch-label">the end?</span>
-    <div class="big" id="end-big"></div>
-    <a class="cta" id="end-cta" href="#"></a>
-    <footer>
-      <span id="end-footer"></span>
-      <div class="p" id="end-copy"></div>
-    </footer>
-  </section>
-
-</main>
+<div class="scrim" id="scrim"></div>
+<div class="panel" id="panel" role="dialog" aria-modal="true" aria-hidden="true"></div>
 
 <script src="content/site.js"></script>
 <script src="js/icons.js"></script>

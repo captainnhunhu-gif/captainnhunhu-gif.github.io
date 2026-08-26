@@ -1,12 +1,13 @@
 /* ============================================================
-   Reads window.SITE and builds the page.
+   Reads window.SITE and builds the room.
 
-   Nothing here needs editing to add a project or a kid —
-   that all lives in content/site.js.
+   Nothing here needs editing to add an object — that lives in
+   content/site.js.
    ============================================================ */
 (function () {
   var S = window.SITE;
   if (!S) return;
+  var ICONS = window.ICONS || {};
 
   function el(tag, cls, text) {
     var n = document.createElement(tag);
@@ -16,74 +17,23 @@
   }
   function mount(id) { return document.getElementById(id); }
 
-  /* ---------- chapter one ---------- */
-  (function origin() {
-    var host = mount('origin-body');
-    if (!host || !S.origin) return;
-    host.appendChild(el('h2', null, S.origin.heading));
-    (S.origin.paragraphs || []).forEach(function (t) {
-      host.appendChild(el('p', null, t));
-    });
-    if (S.origin.whisper) {
-      var p = el('p');
-      p.appendChild(el('span', 'whisper', S.origin.whisper));
-      host.appendChild(p);
-    }
+  function iconSvg(name, cls) {
+    if (!ICONS[name]) return null;
+    var wrap = el('div', cls);
+    wrap.innerHTML =
+      '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.1" ' +
+      'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + '</svg>';
+    return wrap;
+  }
+
+  /* ---------- the sign ---------- */
+  (function sign() {
+    var t = mount('title');    if (t) t.textContent = S.name || '';
+    var g = mount('tagline');  if (g) g.textContent = S.tagline || '';
+    var f = mount('deskfoot'); if (f) f.textContent = S.footer || '';
   })();
 
-  /* ---------- the wall ---------- */
-  (function wall() {
-    var host = mount('wall');
-    if (!host) return;
-    var ICONS = window.ICONS || {};
-
-    function icon(name, px) {
-      if (!ICONS[name]) return null;
-      var wrap = el('div', 'ico');
-      wrap.innerHTML =
-        '<svg width="' + px + '" height="' + px + '" viewBox="0 0 32 32" fill="none" ' +
-        'stroke="currentColor" stroke-width="2.1" stroke-linecap="round" ' +
-        'stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + '</svg>';
-      return wrap;
-    }
-
-    (S.wall || []).forEach(function (p) {
-      var big  = p.size === 'big';
-      var cell = el('div', 'wall-cell' + (big ? ' wall-cell--big' : ''));
-      var pin  = el('article', 'pin pin--' + (p.color || 'cream') + (big ? ' pin--big' : ' pin--small'));
-
-      var ic = icon(p.icon, big ? 34 : 28);
-      if (ic) pin.appendChild(ic);
-
-      pin.appendChild(el('h3', 'pname', p.name));
-      if (p.tag)   pin.appendChild(el('div', 'ptag', p.tag));
-      if (p.blurb) pin.appendChild(el('p', 'pdesc', p.blurb));
-
-      if (p.kind === 'app') {
-        var links = el('div', 'links');
-        if (p.status === 'playable' && p.playUrl) {
-          var play = el('a', 'plink plink--play', '▶ play it');
-          play.href = p.playUrl;
-          play.setAttribute('aria-label', 'Play ' + p.name + ' in your browser');
-          links.appendChild(play);
-        }
-        if (p.repoUrl) {
-          var code = el('a', 'plink plink--code', 'see the code');
-          code.href = p.repoUrl;
-          code.setAttribute('aria-label', 'Source code for ' + p.name);
-          links.appendChild(code);
-        }
-        if (!p.playUrl && !p.repoUrl) links.appendChild(el('span', 'plink plink--soon', 'coming soon'));
-        pin.appendChild(links);
-      }
-
-      cell.appendChild(pin);
-      if (p.note) cell.appendChild(el('p', 'note', p.note));
-      host.appendChild(cell);
-    });
-  })();
-
-  /* ---------- the little shop-sign ticker ---------- */
+  /* ---------- the ticker ---------- */
   (function ticker() {
     var host = mount('ticker');
     if (!host || !S.ticker || !S.ticker.length) return;
@@ -98,53 +48,104 @@
     host.appendChild(track);
   })();
 
-  /* ---------- chapter three ---------- */
-  (function numbers() {
-    var host = mount('receipts');
-    if (!host) return;
-    (S.numbers || []).forEach(function (s) {
-      var box = el('div', 'stat');
-      box.appendChild(el('div', 'n', s.n));
-      box.appendChild(el('div', 'cap', s.cap));
-      host.appendChild(box);
-    });
-    var lead = mount('numbers-lead');
-    if (lead && S.numbersLead) lead.textContent = S.numbersLead;
-    var foot = mount('numbers-foot');
-    if (foot && S.numbersFoot) foot.textContent = S.numbersFoot;
-  })();
+  /* ---------- the panel ---------- */
+  var scrim = mount('scrim');
+  var panel = mount('panel');
+  var lastFocus = null;
 
-  /* ---------- the kids ---------- */
-  (function kids() {
-    var host = mount('kids-list');
-    if (!host) return;
-    (S.kids || []).forEach(function (k) {
-      var row = el('div', 'kid-row');
-      row.appendChild(el('span', 'kname', k.name));
-      row.appendChild(el('span', 'ksince', 'since ' + k.since));
-      if (k.note) row.appendChild(el('span', 'knote', k.note));
-      host.appendChild(row);
-    });
-  })();
+  function closePanel() {
+    if (!panel) return;
+    panel.classList.remove('open');
+    if (scrim) scrim.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    if (lastFocus) { lastFocus.focus(); lastFocus = null; }
+  }
 
-  /* ---------- the end ---------- */
-  (function end() {
-    var big = mount('end-big');
-    if (big && S.end) {
-      big.appendChild(document.createTextNode(S.end.big || ''));
-      big.appendChild(el('b', null, S.end.bigEm || ''));
-      big.appendChild(document.createTextNode(S.end.bigAfter || ''));
+  function openPanel(item, from) {
+    if (!panel) return;
+    lastFocus = from || null;
+    panel.className = 'panel panel--' + (item.color || 'cream');
+    panel.innerHTML = '';
+
+    var close = el('button', 'close', '✕');
+    close.setAttribute('aria-label', 'Close');
+    close.addEventListener('click', closePanel);
+    panel.appendChild(close);
+
+    var ic = iconSvg(item.icon, 'pico');
+    if (ic) panel.appendChild(ic);
+
+    panel.appendChild(el('h2', null, item.title || item.label));
+    if (item.tag) panel.appendChild(el('div', 'ptag', item.tag));
+    (item.body || []).forEach(function (t) { panel.appendChild(el('p', null, t)); });
+
+    if (item.numbers) {
+      var nums = el('div', 'nums');
+      item.numbers.forEach(function (s) {
+        var box = el('div', 'stat');
+        box.appendChild(el('div', 'n', s.n));
+        box.appendChild(el('div', 'cap', s.cap));
+        nums.appendChild(box);
+      });
+      panel.appendChild(nums);
     }
-    var cta = mount('end-cta');
-    if (cta && S.end) {
-      cta.href = 'mailto:' + S.end.email;
-      cta.textContent = S.end.cta + ' ';
-      cta.appendChild(el('span', 'arrow', '↗'));
+
+    var links = el('div', 'links');
+    if (item.playUrl) {
+      var play = el('a', 'plink', '▶ play it');
+      play.href = item.playUrl;
+      play.setAttribute('aria-label', 'Play ' + (item.title || item.label) + ' in your browser');
+      links.appendChild(play);
     }
-    var f = mount('end-footer');
-    if (f && S.end) f.textContent = S.end.footer;
-    var c = mount('end-copy');
-    if (c && S.end) c.textContent = S.end.copyright;
+    if (item.repoUrl) {
+      var code = el('a', 'plink plink--code', 'see the code');
+      code.href = item.repoUrl;
+      links.appendChild(code);
+    }
+    if (item.email) {
+      var mail = el('a', 'plink', item.cta || 'say hi');
+      mail.href = 'mailto:' + item.email;
+      links.appendChild(mail);
+    }
+    // an app with nothing to click yet says so, rather than looking broken
+    if (!links.children.length && item.tag) {
+      links.appendChild(el('span', 'plink plink--soon', 'coming soon'));
+    }
+    if (links.children.length) panel.appendChild(links);
+
+    if (item.note) panel.appendChild(el('p', 'note', item.note));
+
+    panel.setAttribute('aria-hidden', 'false');
+    panel.classList.add('open');
+    if (scrim) scrim.classList.add('open');
+    close.focus();
+  }
+
+  if (scrim) scrim.addEventListener('click', closePanel);
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closePanel();
+  });
+
+  /* ---------- the desk ---------- */
+  (function desk() {
+    var host = mount('desk');
+    if (!host) return;
+
+    (S.desk || []).forEach(function (item, i) {
+      var b = el('button', 'obj obj--' + (item.color || 'cream'));
+      b.type = 'button';
+      b.setAttribute('aria-label', 'Open ' + (item.label || item.title));
+      // stagger the drop so the desk assembles itself instead of appearing
+      b.style.animationDelay = (i * 45) + 'ms';
+      if (i % 4 === 1) b.classList.add('obj--sway');
+
+      var ic = iconSvg(item.icon, 'ico');
+      if (ic) b.appendChild(ic);
+      b.appendChild(el('span', 'lab', item.label || item.title));
+
+      b.addEventListener('click', function () { openPanel(item, b); });
+      host.appendChild(b);
+    });
   })();
 
   /* ---------- day / night ---------- */
@@ -157,25 +158,6 @@
       var dark = now ? now === 'dark'
                      : window.matchMedia('(prefers-color-scheme: dark)').matches;
       root.setAttribute('data-theme', dark ? 'light' : 'dark');
-    });
-  })();
-
-  /* ---------- scroll reveals ---------- */
-  (function reveals() {
-    var items = document.querySelectorAll('.reveal');
-    // No observer, or the reader asked for less motion? Leave everything visible.
-    if (!('IntersectionObserver' in window) ||
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.12 });
-
-    items.forEach(function (n) {
-      n.classList.add('armed');          // hide only now that JS is definitely alive
-      io.observe(n);
     });
   })();
 })();

@@ -33,21 +33,6 @@
     var f = mount('deskfoot'); if (f) f.textContent = S.footer || '';
   })();
 
-  /* ---------- the ticker ---------- */
-  (function ticker() {
-    var host = mount('ticker');
-    if (!host || !S.ticker || !S.ticker.length) return;
-    var track = el('div', 'ticker-track');
-    // printed twice so the loop meets itself with no visible seam
-    for (var pass = 0; pass < 2; pass++) {
-      S.ticker.forEach(function (t) {
-        track.appendChild(el('span', null, t));
-        track.appendChild(el('b', null, '✳'));
-      });
-    }
-    host.appendChild(track);
-  })();
-
   /* ---------- the panel ---------- */
   var scrim = mount('scrim');
   var panel = mount('panel');
@@ -142,6 +127,12 @@
       var ic = iconSvg(item.icon, 'ico');
       if (ic) b.appendChild(ic);
       b.appendChild(el('span', 'lab', item.label || item.title));
+      if (item.playUrl) {
+        var dot = el('span', 'play-dot', '▶');
+        dot.setAttribute('aria-hidden', 'true');
+        b.appendChild(dot);
+        b.setAttribute('aria-label', 'Open ' + (item.label || item.title) + ' — playable in your browser');
+      }
 
       b.addEventListener('click', function () { openPanel(item, b); });
       host.appendChild(b);

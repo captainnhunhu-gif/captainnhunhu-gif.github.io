@@ -19,13 +19,6 @@ window.SITE = {
   blocks:   ['Q', 'U', 'Ỳ', 'N', 'H', '♥'],
   tagline:  'a mom, a marketer, and a small pile of apps that weren’t supposed to work',
 
-  ticker: [
-    'made at nap time',
-    'five apps in thirty-six days',
-    'nothing here was supposed to work',
-    'two of them you can play right now',
-  ],
-
   desk: [
     /* ---------- the story ---------- */
     {

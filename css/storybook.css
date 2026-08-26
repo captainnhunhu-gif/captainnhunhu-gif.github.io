@@ -3,8 +3,8 @@
 
    The whole site is a desk. Every object on it opens a panel.
    Warm studio palette, no blue. Everything decorative is drawn in
-   CSS: wobbly borders are lopsided border-radius, the ribbons are
-   repeating gradients. Self-hosted font, no build step, no requests.
+   CSS: the wobbly borders are lopsided border-radius values, nothing
+   is an image. Self-hosted font, no build step, no external requests.
    ============================================================ */
 
 @font-face{
@@ -66,20 +66,6 @@ body{
   height:100dvh;display:flex;flex-direction:column;
 }
 
-/* ---------- ribbons & ticker ---------- */
-.ribbon{height:11px;border:0;margin:0;flex:none;}
-.ribbon--stripe{background:repeating-linear-gradient(-45deg,var(--maroon) 0 7px,var(--paper) 7px 15px);}
-.ribbon--dots{
-  background:var(--powder);
-  background-image:radial-gradient(var(--maroon) 2.4px,transparent 2.5px);
-  background-size:15px 15px;background-position:center;
-}
-.ticker{overflow:hidden;background:var(--maroon);color:var(--paper);padding:7px 0;white-space:nowrap;flex:none;}
-.ticker-track{display:inline-block;animation:slide 30s linear infinite;}
-.ticker span{font:600 12.5px var(--hand);padding:0 6px;}
-.ticker b{padding:0 13px;opacity:.7;font-weight:400;}
-@keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-
 /* ---------- the sign at the top ---------- */
 .sign{
   flex:none;display:flex;align-items:center;justify-content:space-between;
@@ -137,6 +123,18 @@ body{
 .obj .ico{color:var(--ink);line-height:0;}
 .obj .ico svg{width:clamp(28px,5.4vh,50px);height:clamp(28px,5.4vh,50px);}
 .obj .lab{font:600 clamp(13px,2.2vh,19px)/1.15 var(--hand);}
+
+/* The two games are the strongest thing here and used to look like every other
+   tile. This marks them as playable, where the clicking actually happens. */
+.obj .play-dot{
+  position:absolute;top:-9px;right:-9px;
+  width:30px;height:30px;border-radius:50%;
+  border:2.5px solid var(--ink);background:var(--maroon);color:var(--paper);
+  display:grid;place-items:center;font-size:12px;line-height:1;
+  rotate:-8deg;
+}
+.obj{position:relative;}
+.obj:hover .play-dot{rotate:0deg;}
 
 @keyframes settle{
   from{opacity:0;transform:translateY(-26px) rotate(-9deg) scale(.85);}

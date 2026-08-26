@@ -50,11 +50,7 @@
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     floorY = H - 38;
 
-    var size = Math.max(44, Math.min(92, W / 6.6));
-    var step = size + 6;
-    var cx = W / 2;
-
-    // rows from the bottom up, widest first
+    // Work out the rows first — the shape only depends on how many blocks there are.
     var rows = [], i = 0, want = 3;
     while (i < blocks.length) {
       var row = [];
@@ -62,6 +58,18 @@
       rows.push(row);
       if (want > 1) want--;
     }
+
+    // Then size the blocks so the finished pyramid fits the stage in BOTH
+    // directions. Width alone isn't enough: on a short viewport the top block
+    // used to be drawn above the canvas and got clipped by the frame.
+    var widest = 0;
+    for (var q = 0; q < rows.length; q++) widest = Math.max(widest, rows[q].length);
+    var gap = 6, pad = 26;
+    var byWidth  = (W - pad * 2 - gap * (widest - 1)) / widest;
+    var byHeight = ((floorY - pad) - gap * (rows.length - 1)) / rows.length;
+    var size = Math.max(34, Math.min(92, byWidth, byHeight));
+    var step = size + gap;
+    var cx = W / 2;
 
     for (var r = 0; r < rows.length; r++) {
       var n = rows[r].length;
@@ -318,5 +326,7 @@
   window.addEventListener('resize', layout);
 
   makeBlocks(); layout(); requestAnimationFrame(loop);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load('600 40px Playpen', LETTERS.join('')).then(draw).catch(function(){});
+  }
 })();

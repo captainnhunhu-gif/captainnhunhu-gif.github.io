@@ -67,7 +67,7 @@ body{
   font:600 12px/1 var(--mono);letter-spacing:.08em;color:var(--ink-soft);
 }
 .strip button{
-  font:600 14px var(--hand);color:var(--ink);background:none;
+  font:600 14px var(--hand);color:var(--ink);background:none;white-space:nowrap;
   border:2px solid var(--ink);padding:6px 16px;cursor:pointer;
   border-radius:var(--wob-2);
 }
@@ -242,8 +242,12 @@ footer .p{font:600 11px/1.6 var(--mono);font-style:normal;letter-spacing:.09em;m
 
 /* ---------- responsive ---------- */
 @media (max-width:640px){
-  .about{grid-template-columns:1fr;gap:14px;}
-  .about .doodle{display:none;}
+  /* On a phone the tower fills the frame, so the little figure standing beside
+     it collides with the last block. Hide her there and let the Chapter One
+     doodle carry the mascot instead. */
+  .base-mascot{display:none;}
+  .about{grid-template-columns:66px 1fr;gap:16px;}
+  .about .doodle svg{width:60px;height:71px;}
   .receipts{grid-template-columns:1fr 1fr;gap:22px 16px;}
   .shelf{gap:26px 18px;}
   .squiggle{margin-top:56px;}

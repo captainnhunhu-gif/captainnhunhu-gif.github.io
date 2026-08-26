@@ -19,7 +19,8 @@
   var root = document.documentElement;
 
   var LETTERS = (window.SITE && window.SITE.hero && window.SITE.hero.blocks) || ['Q','U','Ỳ','N','H','♥'];
-  var COLS    = ['--b1','--b2','--b3','--b4','--b1','--b2'];
+  // alternating cream and cobalt, every one outlined in ink like a marker drawing
+  var SCHEME  = ['light','blue'];
 
   var W = 0, H = 0, DPR = 1, floorY = 0;
   var blocks = [];
@@ -34,7 +35,7 @@
     for (var i = 0; i < LETTERS.length; i++) {
       blocks.push({
         x:0, y:0, vx:0, vy:0, a:0, va:0, size:0, r:0,
-        letter: LETTERS[i], col: COLS[i % COLS.length],
+        letter: LETTERS[i], mode: SCHEME[i % SCHEME.length],
         tx:0, ty:0, ta:0,
       });
     }
@@ -49,7 +50,7 @@
     ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     floorY = H - 38;
 
-    var size = Math.max(40, Math.min(72, W / 8));
+    var size = Math.max(44, Math.min(92, W / 6.6));
     var step = size + 6;
     var cx = W / 2;
 
@@ -187,20 +188,61 @@
     ctx.closePath();
   }
 
+  /* A marker-drawn frame: walk the perimeter of an inset rectangle and push
+     each point in and out on a sine wave, so the line wobbles like a pen. */
+  function drawFrame() {
+    var inset = 13, amp = 6.5, wave = 34;
+    var x0 = inset, y0 = inset, x1 = W - inset, y1 = H - inset;
+    var w = x1 - x0, h = y1 - y0;
+    if (w <= 0 || h <= 0) return;
+    var per = 2 * (w + h);
+    var steps = Math.max(120, Math.round(per / 5));
+
+    ctx.beginPath();
+    for (var i = 0; i <= steps; i++) {
+      var d = (i / steps) * per, x, y, nx, ny;
+      if (d < w)                { x = x0 + d;             y = y0;                 nx = 0;  ny = -1; }
+      else if (d < w + h)       { x = x1;                 y = y0 + (d - w);       nx = 1;  ny = 0;  }
+      else if (d < 2 * w + h)   { x = x1 - (d - w - h);   y = y1;                 nx = 0;  ny = 1;  }
+      else                      { x = x0;                 y = y1 - (d - 2*w - h); nx = -1; ny = 0;  }
+      var off = Math.sin((d / wave) * Math.PI * 2) * amp;
+      var px = x + nx * off, py = y + ny * off;
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = css('--blue') || '#1B4DE4';
+    ctx.lineWidth = 4;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+
   function draw() {
     ctx.clearRect(0, 0, W, H);
+    drawFrame();
+    var cream = css('--card') || '#FBF9F4';
+    var blue  = css('--blue') || '#1B4DE4';
+    var ink   = css('--ink')  || '#171614';
+
     for (var i = 0; i < blocks.length; i++) {
       var b = blocks[i], s = b.size;
+      var isBlue = b.mode === 'blue';
       ctx.save();
       ctx.translate(b.x, b.y); ctx.rotate(b.a);
-      ctx.fillStyle = 'rgba(0,0,0,0.10)'; roundRect(-s/2 + 2, -s/2 + 5, s, s, 12); ctx.fill();
-      ctx.fillStyle = css(b.col) || '#E4634B'; roundRect(-s/2, -s/2, s, s, 12); ctx.fill();
-      ctx.fillStyle = 'rgba(255,255,255,0.28)'; roundRect(-s/2, -s/2, s, s*0.34, 12); ctx.fill();
-      ctx.fillStyle = 'rgba(0,0,0,0.12)'; roundRect(-s/2, s/2 - s*0.20, s, s*0.20, 12); ctx.fill();
-      ctx.fillStyle = '#fff';
-      ctx.font = '800 ' + Math.round(s * 0.5) + 'px ' + css('--sans');
+
+      // flat fill, then a heavy ink outline — no gloss, no gradients
+      ctx.fillStyle = isBlue ? blue : cream;
+      roundRect(-s/2, -s/2, s, s, 13); ctx.fill();
+
+      ctx.strokeStyle = ink;
+      ctx.lineWidth = 2.5;
+      ctx.lineJoin = 'round';
+      roundRect(-s/2, -s/2, s, s, 13); ctx.stroke();
+
+      ctx.fillStyle = isBlue ? cream : blue;
+      ctx.font = '600 ' + Math.round(s * 0.46) + 'px ' + css('--hand');
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText(b.letter, 0, s * 0.03);
+      ctx.fillText(b.letter, 0, s * 0.04);
       ctx.restore();
     }
   }
@@ -276,4 +318,5 @@
   window.addEventListener('resize', layout);
 
   makeBlocks(); layout(); requestAnimationFrame(loop);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(draw);
 })();

@@ -1,0 +1,7 @@
+Playpen Sans
+Copyright (c) 2022, TypeTogether (https://www.type-together.com)
+Licensed under the SIL Open Font License, Version 1.1.
+http://scripts.sil.org/OFL
+
+Bundled here on purpose. This site has no external dependencies, so the
+typeface ships with it and will still render in twenty years.

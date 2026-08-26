@@ -40,7 +40,7 @@
       // one grid cell per project: the block card, with its margin note tucked under it
       var cell = el('div', 'proj-cell');
       var card = el('article', 'proj proj--' + (p.color || 'b1'));
-      card.appendChild(el('span', 'kicker', p.kicker || ''));
+      card.appendChild(el('span', 'chip', p.kicker || ''));
       card.appendChild(el('h3', 'pname', p.name));
       card.appendChild(el('p', 'pdesc', p.blurb || ''));
 

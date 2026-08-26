@@ -2,10 +2,13 @@
    THE ONE FILE.
 
    Everything you'll ever want to change lives here.
-   Add an app?  Add one object to PROJECTS.
-   Add a kid?   Add one object to KIDS.
+   Add anything to the wall?  Add one object to WALL.
+   Add a kid?                 Add one object to KIDS.
    Nothing else in this site needs touching, ever.
 
+   icon:  a name from js/icons.js
+   size:  'big' takes up more of the wall. 'small' is a little object.
+   color: cream · pink · powder · olive
    `draft: true` marks words I wrote for you as a starting point.
    Rewrite them in your own voice and delete the flag.
    ============================================================ */
@@ -14,12 +17,18 @@ window.SITE = {
 
   /* ---------- the cover ---------- */
   hero: {
-    eyebrow: 'A portfolio you can knock over',
-    titleA: 'Work in ',
-    titleB: 'Progress',
+    eyebrow: 'a portfolio you can knock over',
     subtitle: 'A mom, a marketer, and a small pile of apps that weren’t supposed to work. (They did.)',
     blocks: ['Q', 'U', 'Ỳ', 'N', 'H', '♥'],
   },
+
+  /* the little scrolling banner, like a shop sign */
+  ticker: [
+    'made at nap time',
+    'five apps in thirty-six days',
+    'nothing here was supposed to work',
+    'two of them you can play right now',
+  ],
 
   /* ---------- chapter one ---------- */
   origin: {
@@ -32,66 +41,92 @@ window.SITE = {
     whisper: 'Still figuring out motherhood and building at the same time. Here’s what I’ve stacked so far.',
   },
 
-  /* ---------- chapter two ---------- */
-  projects: [
+  /* ---------- THE WALL ----------
+     Apps and everything else, all pinned up together. That mix is
+     the whole point: it should read like her desk, not a portfolio. */
+  wall: [
     {
-      id: 'wonderling',
+      id: 'wonderling', kind: 'app', icon: 'bottle', size: 'big', color: 'powder',
       name: 'Wonderling',
-      kicker: 'Web app · July 2026',
+      tag: 'web app · july 2026',
       blurb: 'A baby tracker that works with the wifi off, and a 3 a.m. advisor that tells you NORMAL, WATCH, or CALL NOW before it says anything else.',
-      status: 'soon',
-      playUrl: null,
-      repoUrl: null,
-      color: 'b4',
-      marginNote: 'The advisor reads your own logs, so it answers about your baby and not a baby. A hard-coded interceptor catches emergencies before the AI is ever asked — some questions should never wait for a model to think.',
+      status: 'soon', playUrl: null, repoUrl: null,
+      note: 'It reads your own logs, so it answers about your baby and not a baby. A hard-coded interceptor catches emergencies before the AI is ever asked.',
       draft: true,
     },
     {
-      id: 'balloon-pop',
+      id: 'balloon-pop', kind: 'app', icon: 'balloon', size: 'big', color: 'pink',
       name: 'Balloon Pop Party',
-      kicker: 'Webcam game · July 2026',
+      tag: 'webcam game · july 2026',
       blurb: 'Swipe your hand through the air to pop balloons. Grab the milk bottle for double points. Do not touch the dirty diaper.',
       status: 'playable',
       playUrl: 'https://captainnhunhu-gif.github.io/balloon-pop/',
       repoUrl: 'https://github.com/captainnhunhu-gif/balloon-pop',
-      color: 'b1',
-      marginNote: 'Built for Ryan’s first birthday. It had to work in a loud room full of people who would not read a single instruction, so there are none.',
+      note: 'Built for Ryan’s first birthday. It had to work in a loud room full of people who would not read a single instruction, so there are none.',
       draft: true,
     },
     {
-      id: 'flappy-face',
+      id: 'flappy-face', kind: 'app', icon: 'bird', size: 'big', color: 'olive',
       name: 'Flappy Face',
-      kicker: 'Webcam game · July 2026',
+      tag: 'webcam game · july 2026',
       blurb: 'Open your mouth to fly. Tilt your head to steer. Nobody has to explain it, because the instruction is the control.',
       status: 'playable',
       playUrl: 'https://captainnhunhu-gif.github.io/flappy-face/',
       repoUrl: 'https://github.com/captainnhunhu-gif/flappy-face',
-      color: 'b3',
-      marginNote: 'Started the same day as Balloon Pop. Watching grown adults gape their mouths open at a big screen turned out to be the entire point.',
+      note: 'Started the same day as Balloon Pop. Watching grown adults gape their mouths open at a big screen turned out to be the entire point.',
       draft: true,
     },
     {
-      id: 'photobooth',
+      id: 'ryan', kind: 'thing', icon: 'heart', size: 'small', color: 'pink',
+      name: 'Ryan',
+      blurb: 'one, and busy. the reason three of these exist.',
+    },
+    {
+      id: 'photobooth', kind: 'app', icon: 'camera', size: 'big', color: 'cream',
       name: 'Photobooth',
-      kicker: 'Desktop app · June 2026',
+      tag: 'desktop app · june 2026',
       blurb: 'Four shots, composed into one filmstrip over my own background art, printed straight out of a Canon over USB. No cloud, no waiting.',
-      status: 'soon',
-      playUrl: null,
-      repoUrl: null,
-      color: 'b2',
-      marginNote: 'The hardest part was not the camera or the compositing. It was making a printer print silently, without a dialog box, in front of a queue of guests.',
+      status: 'soon', playUrl: null, repoUrl: null,
+      note: 'The hardest part was not the camera or the compositing. It was making a printer print silently, with no dialog box, in front of a queue of guests.',
       draft: true,
     },
     {
-      id: 'baby-wall',
+      id: 'coffee', kind: 'thing', icon: 'coffee', size: 'small', color: 'olive',
+      name: 'fuel',
+      blurb: 'oat flat white, extra shot, reheated twice',
+      draft: true,
+    },
+    {
+      id: 'baby-wall', kind: 'app', icon: 'frame', size: 'big', color: 'powder',
       name: 'Baby Wall',
-      kicker: 'Web app · June 2026',
+      tag: 'web app · june 2026',
       blurb: 'A wall of the people who love him, for a baby who can’t read yet. Every name in Vietnamese and English.',
-      status: 'code',
-      playUrl: null,
+      status: 'code', playUrl: null,
       repoUrl: 'https://github.com/captainnhunhu-gif/baby-wall',
-      color: 'b4',
-      marginNote: 'The first thing I ever built. It is not the best one, and I am leaving it here on purpose.',
+      note: 'The first thing I ever built. It is not the best one, and I am leaving it here on purpose.',
+      draft: true,
+    },
+    {
+      id: 'nightstand', kind: 'thing', icon: 'books', size: 'small', color: 'cream',
+      name: 'on the nightstand',
+      blurb: 'three books, none of them finished',
+      draft: true,
+    },
+    {
+      id: 'threeam', kind: 'thing', icon: 'clock', size: 'small', color: 'powder',
+      name: '3 a.m.',
+      blurb: 'the hour most of this got built',
+    },
+    {
+      id: 'onrepeat', kind: 'thing', icon: 'music', size: 'small', color: 'pink',
+      name: 'on repeat',
+      blurb: 'something quiet, so the baby stays down',
+      draft: true,
+    },
+    {
+      id: 'wishlist', kind: 'thing', icon: 'sparkle', size: 'small', color: 'olive',
+      name: 'apps I wish existed',
+      blurb: 'one that folds laundry · a snooze button for teething',
       draft: true,
     },
   ],

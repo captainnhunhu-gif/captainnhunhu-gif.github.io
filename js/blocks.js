@@ -19,8 +19,8 @@
   var root = document.documentElement;
 
   var LETTERS = (window.SITE && window.SITE.hero && window.SITE.hero.blocks) || ['Q','U','Ỳ','N','H','♥'];
-  // alternating cream and cobalt, every one outlined in ink like a marker drawing
-  var SCHEME  = ['light','blue'];
+  // real toy-block colours, every one outlined in ink like a marker drawing
+  var SCHEME  = ['--pink','--powder','--olive','--cream','--pink','--powder'];
 
   var W = 0, H = 0, DPR = 1, floorY = 0;
   var blocks = [];
@@ -35,7 +35,7 @@
     for (var i = 0; i < LETTERS.length; i++) {
       blocks.push({
         x:0, y:0, vx:0, vy:0, a:0, va:0, size:0, r:0,
-        letter: LETTERS[i], mode: SCHEME[i % SCHEME.length],
+        letter: LETTERS[i], col: SCHEME[i % SCHEME.length],
         tx:0, ty:0, ta:0,
       });
     }
@@ -228,18 +228,15 @@
   function draw() {
     ctx.clearRect(0, 0, W, H);
     drawFrame();
-    var cream = css('--card') || '#FBF9F4';
-    var blue  = css('--blue') || '#1B4DE4';
-    var ink   = css('--ink')  || '#171614';
+    var ink = css('--ink') || '#241F1E';
 
     for (var i = 0; i < blocks.length; i++) {
       var b = blocks[i], s = b.size;
-      var isBlue = b.mode === 'blue';
       ctx.save();
       ctx.translate(b.x, b.y); ctx.rotate(b.a);
 
-      // flat fill, then a heavy ink outline — no gloss, no gradients
-      ctx.fillStyle = isBlue ? blue : cream;
+      // flat pastel fill, then a heavy ink outline — no gloss, no gradients
+      ctx.fillStyle = css(b.col) || '#F3D3DA';
       roundRect(-s/2, -s/2, s, s, 13); ctx.fill();
 
       ctx.strokeStyle = ink;
@@ -247,7 +244,7 @@
       ctx.lineJoin = 'round';
       roundRect(-s/2, -s/2, s, s, 13); ctx.stroke();
 
-      ctx.fillStyle = isBlue ? cream : blue;
+      ctx.fillStyle = ink;
       ctx.font = '600 ' + Math.round(s * 0.46) + 'px ' + css('--hand');
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       ctx.fillText(b.letter, 0, s * 0.04);

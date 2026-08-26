@@ -8,7 +8,9 @@ My storybook. A mom, a marketer, and a small pile of apps that weren't supposed 
 
 Everything editable lives in one file: [`content/site.js`](content/site.js).
 
-- **New app?** Add one object to `projects`.
+- **New app, or anything else for the wall?** Add one object to `wall`.
+  Set `size: 'big'` for a project, `'small'` for a little object.
+  `icon:` is any name from `js/icons.js`; `color:` is cream, pink, powder or olive.
 - **New kid?** Add one row to `kids`.
 - **New number?** Add one to `numbers`.
 
@@ -19,12 +21,7 @@ Lines marked `draft: true` are placeholder words waiting to be replaced with my 
 ## How it's built
 
 Plain HTML, CSS, and JavaScript. No build step, no framework, no package manager,
-no dependencies of any kind. The one typeface ships inside this repo, so the page
-makes zero requests to anyone else's server.
-
-One caveat: browsers refuse to load fonts over `file://`, so if you double-click
-`index.html` the handwriting falls back to a system face. Everything else works.
-To see it exactly as published, run `python3 -m http.server` and open localhost.
+no webfonts, no dependencies of any kind. Open `index.html` in a browser and it runs.
 
 That's deliberate. My kids are going to open this in fifteen years, and a plain
 HTML file still opens in fifteen years. A pile of packages does not.
@@ -35,8 +32,8 @@ HTML file still opens in fifteen years. A pile of packages does not.
 | `index.html` | The page skeleton and the mount points. |
 | `css/storybook.css` | Palette, type, layout, day/night. |
 | `js/render.js` | Reads `site.js`, builds the page, handles the theme toggle. |
-| `js/blocks.js` | Hand-rolled toy-block physics and the wavy marker frame. No library. |
-| `fonts/` | Playpen Sans, bundled. Open Font License. Picked because it's one of the few handwriting faces that spells QUỲNH NGUYỄN correctly. |
+| `js/icons.js` | The hand-drawn icons. Add one here to use it on the wall. |
+| `js/blocks.js` | Hand-rolled toy-block physics for the tower. No library. |
 
 ## The tower
 

@@ -31,44 +31,71 @@
     }
   })();
 
-  /* ---------- chapter two ---------- */
-  (function projects() {
-    var host = mount('shelf');
+  /* ---------- the wall ---------- */
+  (function wall() {
+    var host = mount('wall');
     if (!host) return;
+    var ICONS = window.ICONS || {};
 
-    (S.projects || []).forEach(function (p) {
-      // one grid cell per project: the block card, with its margin note tucked under it
-      var cell = el('div', 'proj-cell');
-      var card = el('article', 'proj proj--' + (p.color || 'b1'));
-      card.appendChild(el('span', 'chip', p.kicker || ''));
-      card.appendChild(el('h3', 'pname', p.name));
-      card.appendChild(el('p', 'pdesc', p.blurb || ''));
+    function icon(name, px) {
+      if (!ICONS[name]) return null;
+      var wrap = el('div', 'ico');
+      wrap.innerHTML =
+        '<svg width="' + px + '" height="' + px + '" viewBox="0 0 32 32" fill="none" ' +
+        'stroke="currentColor" stroke-width="2.1" stroke-linecap="round" ' +
+        'stroke-linejoin="round" aria-hidden="true">' + ICONS[name] + '</svg>';
+      return wrap;
+    }
 
-      var links = el('div', 'links');
+    (S.wall || []).forEach(function (p) {
+      var big  = p.size === 'big';
+      var cell = el('div', 'wall-cell' + (big ? ' wall-cell--big' : ''));
+      var pin  = el('article', 'pin pin--' + (p.color || 'cream') + (big ? ' pin--big' : ' pin--small'));
 
-      if (p.status === 'playable' && p.playUrl) {
-        var play = el('a', 'plink plink--play', '▶ play it');
-        play.href = p.playUrl;
-        play.setAttribute('aria-label', 'Play ' + p.name + ' in your browser');
-        links.appendChild(play);
+      var ic = icon(p.icon, big ? 34 : 28);
+      if (ic) pin.appendChild(ic);
+
+      pin.appendChild(el('h3', 'pname', p.name));
+      if (p.tag)   pin.appendChild(el('div', 'ptag', p.tag));
+      if (p.blurb) pin.appendChild(el('p', 'pdesc', p.blurb));
+
+      if (p.kind === 'app') {
+        var links = el('div', 'links');
+        if (p.status === 'playable' && p.playUrl) {
+          var play = el('a', 'plink plink--play', '▶ play it');
+          play.href = p.playUrl;
+          play.setAttribute('aria-label', 'Play ' + p.name + ' in your browser');
+          links.appendChild(play);
+        }
+        if (p.repoUrl) {
+          var code = el('a', 'plink plink--code', 'see the code');
+          code.href = p.repoUrl;
+          code.setAttribute('aria-label', 'Source code for ' + p.name);
+          links.appendChild(code);
+        }
+        if (!p.playUrl && !p.repoUrl) links.appendChild(el('span', 'plink plink--soon', 'coming soon'));
+        pin.appendChild(links);
       }
-      if (p.repoUrl) {
-        var code = el('a', 'plink plink--code', 'see the code');
-        code.href = p.repoUrl;
-        code.setAttribute('aria-label', 'Source code for ' + p.name);
-        links.appendChild(code);
-      }
-      if (!p.playUrl && !p.repoUrl) {
-        links.appendChild(el('span', 'plink plink--soon', 'coming soon'));
-      }
 
-      card.appendChild(links);
-      cell.appendChild(card);
-
-      if (p.marginNote) cell.appendChild(el('p', 'note', p.marginNote));
-
+      cell.appendChild(pin);
+      if (p.note) cell.appendChild(el('p', 'note', p.note));
       host.appendChild(cell);
     });
+  })();
+
+  /* ---------- the little shop-sign ticker ---------- */
+  (function ticker() {
+    var host = mount('ticker');
+    if (!host || !S.ticker || !S.ticker.length) return;
+    var track = el('div', 'ticker-track');
+    // printed twice so the loop meets itself with no visible seam
+    for (var pass = 0; pass < 2; pass++) {
+      S.ticker.forEach(function (t) {
+        track.appendChild(el('span', null, t));
+        track.appendChild(el('b', null, '✳'));
+      });
+    }
+    host.appendChild(track);
   })();
 
   /* ---------- chapter three ---------- */

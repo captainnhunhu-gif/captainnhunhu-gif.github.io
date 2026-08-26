@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Work in Progress — Quỳnh</title>
+<meta name="description" content="A mom, a marketer, and a small pile of apps that weren’t supposed to work. Two of them you can play right now with your webcam.">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23E4634B'/%3E%3Ctext x='16' y='23' font-size='19' font-weight='800' text-anchor='middle' fill='white' font-family='sans-serif'%3EQ%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/storybook.css">
+</head>
+<body>
+
+<div class="strip">
+  <span>✳ a true story · still being written</span>
+  <button id="theme" aria-label="Toggle day and night mode">day / night</button>
+</div>
+
+<main class="shell">
+
+  <!-- ================= COVER ================= -->
+  <section class="hero">
+    <div class="eyebrow">A portfolio you can knock over</div>
+    <h1 class="title">Work in <i>Progress</i></h1>
+    <p class="subtitle">A mom, a marketer, and a small pile of apps that weren’t supposed to work. (They did.)</p>
+
+    <div class="stage-wrap">
+      <div class="stage" id="stage"
+           aria-label="An interactive tower of toy blocks spelling Quỳnh. Drag a block to fling it, or use the buttons below to knock the tower down and build it back.">
+        <canvas id="c"></canvas>
+        <div class="floorline"></div>
+        <div class="base-mascot">
+          <svg width="60" height="72" viewBox="0 0 120 150" fill="none" stroke="currentColor"
+               stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="55" cy="20" r="9"/>
+            <path d="M40 34 Q40 18 55 18 Q70 18 70 34"/>
+            <circle cx="55" cy="44" r="19"/>
+            <ellipse cx="49" cy="44" rx="2.1" ry="2.6"/>
+            <ellipse cx="61" cy="44" rx="2.1" ry="2.6"/>
+            <g class="m-calm"><path d="M50 53 Q55 57 60 53"/></g>
+            <g class="m-startled"><circle cx="55" cy="54" r="3.4"/></g>
+            <path d="M42 66 L38 108 L72 108 L68 66 Z"/>
+            <path d="M44 70 L30 92"/>
+            <path d="M66 70 L84 62"/>
+          </svg>
+        </div>
+      </div>
+      <div class="hint" id="hint">psst — grab a block and fling it.</div>
+      <div class="controls">
+        <button class="btn btn--knock" id="knock">🧱 knock it down</button>
+        <button class="btn btn--build" id="build">↺ build it back</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CHAPTER ONE ================= -->
+  <section class="about reveal">
+    <div class="doodle" aria-hidden="true">
+      <svg width="96" height="112" viewBox="0 0 120 150" fill="none" stroke="currentColor"
+           stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="55" cy="20" r="9"/>
+        <path d="M40 34 Q40 18 55 18 Q70 18 70 34"/>
+        <circle cx="55" cy="44" r="19"/>
+        <ellipse cx="49" cy="44" rx="2.1" ry="2.6"/>
+        <ellipse cx="61" cy="44" rx="2.1" ry="2.6"/>
+        <path d="M50 53 Q55 57 60 53"/>
+        <path d="M42 66 L38 108 L72 108 L68 66 Z"/>
+        <path d="M44 70 L30 92"/>
+        <path d="M66 70 L84 54"/>
+      </svg>
+    </div>
+    <div>
+      <div class="ch-label">Chapter One</div>
+      <div id="origin-body"></div>
+    </div>
+  </section>
+
+  <!-- ================= CHAPTER TWO ================= -->
+  <section class="work reveal">
+    <div class="ch-label">Chapter Two</div>
+    <h2>The things she stacked.</h2>
+    <div class="shelf" id="shelf"></div>
+  </section>
+
+  <!-- ================= CHAPTER THREE ================= -->
+  <section class="receipts-wrap reveal">
+    <div class="ch-label">Chapter Three</div>
+    <h2>The receipts.</h2>
+    <p class="lead" id="numbers-lead"></p>
+    <div class="receipts" id="receipts"></div>
+    <p class="sharp-note" id="numbers-foot"></p>
+  </section>
+
+  <!-- ================= WHO IT'S FOR ================= -->
+  <section class="kids reveal">
+    <div class="ch-label">Dedication</div>
+    <h2>For the ones who won’t read this for years.</h2>
+    <div id="kids-list"></div>
+  </section>
+
+  <!-- ================= THE END ================= -->
+  <section class="end reveal" id="contact">
+    <div class="ch-label">The End?</div>
+    <div class="big" id="end-big"></div>
+    <a class="cta" id="end-cta" href="#"></a>
+    <footer>
+      <span id="end-footer"></span>
+      <div class="p" id="end-copy"></div>
+    </footer>
+  </section>
+
+</main>
+
+<script src="content/site.js"></script>
+<script src="js/render.js"></script>
+<script src="js/blocks.js"></script>
+</body>
+</html>
